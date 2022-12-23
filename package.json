@@ -1,0 +1,32 @@
+{
+  "name": "01---aula",
+  "version": "1.0.0",
+  "description": "Primeira aula de node",
+  "main": "index.js",
+  "engines": {
+    "node": "16.x"
+  },
+  "scripts": {
+    "start": "node dist/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-dev": "nodemon -e ts,json,mustache src/server.ts"
+  },
+  "author": "Leandro T. Ribeiro",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.14",
+    "@types/mongoose": "^5.11.97",
+    "@types/node": "^18.11.11",
+    "@types/nodemon": "^1.19.2",
+    "@types/validator": "^13.7.10"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^6.8.0",
+    "validator": "^13.7.0"
+  }
+}
