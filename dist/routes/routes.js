@@ -32,4 +32,5 @@ router.post('/tasks', apiController.add);
 router.put('/task/:id', apiController.att);
 router.delete('/task/:id', apiController.del);
 router.get('/task/:query', apiController.search);
+router.get('/task/show/:id', apiController.getOneTask);
 exports.default = router;
