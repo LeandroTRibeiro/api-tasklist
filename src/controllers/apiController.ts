@@ -81,3 +81,11 @@ export const search = async (req: Request, res: Response) => {
     }
 
 };
+
+export const getOneTask = async (req: Request, res: Response) => {
+    
+    const task = await Task.findOne({_id: req.params.id});
+
+        res.json({task});
+
+};
