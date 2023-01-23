@@ -122,8 +122,8 @@ Response:
 ```
 ___
 
-<h3 id="search">GET - /tasks/Node</h3>
-💡 Mandar informações de pesquisa pelo query params.
+<h3 id="search">GET - /tasks/:query</h3>
+💡 Mandar informações de pesquisa pelo query params. Ex: /tasks/Node
 <br>Response:
 
 ```
@@ -141,8 +141,8 @@ ___
 ```
 ___
 
-<h3 id="searchid">GET - /task/show/63beaa00edf64f4ce043c8c2</h3>
-💡 Mandar informações de pesquisa pelo query params.
+<h3 id="searchid">GET - /task/show/:id</h3>
+💡 Mandar informações de pesquisa pelo query params. Ex: /task/show/63beaa00edf64f4ce043c8c2
 <br>Response:
 
 ```
@@ -184,8 +184,8 @@ ___
 ```
 ___
 
-<h3 id="put">PUT - /task/63cedbaa716e6e1333b18130</h3>
-💡 Mandar informações de pesquisa pelo id no query params, e updates por JSON.
+<h3 id="put">PUT - /task/:id</h3>
+💡 Mandar informações de pesquisa pelo id no query params, e updates por JSON. Ex: /task/63cedbaa716e6e1333b18130
 
 <br>Request:
 
@@ -212,8 +212,8 @@ ___
 ```
 ___
 
-<h3 id="del">DEL - /task/63cedbaa716e6e1333b18130</h3>
-💡 Mandar informações de pesquisa pelo id no query params.
+<h3 id="del">DEL - /task/:id</h3>
+💡 Mandar informações de pesquisa pelo id no query params. Ex: /task/63cedbaa716e6e1333b18130
 
 <br>Response:
 
