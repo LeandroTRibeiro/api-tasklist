@@ -51,6 +51,9 @@ Este projeto é dividio em duas partes:
 🧭 Rodando a aplicação web (Backend)
 
 ```bash
+# Pré-requisitos globais
+$ npm i -g nodemon typescript ts-node
+
 # clone o repositório
 $ git clone https://github.com/LeandroTRibeiro/api-tasklist
 
