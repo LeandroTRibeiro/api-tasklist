@@ -28,9 +28,11 @@ const add = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const description = req.body.description;
     const done = false;
     const newTask = new Task_1.default;
-    if (req.body.title) {
-        newTask.title = title;
+    if (req.body.title || req.body.description) {
         newTask.done = done;
+        if (title) {
+            newTask.title = title;
+        }
         if (description) {
             newTask.description = description;
         }
@@ -39,7 +41,7 @@ const add = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.json({ newTask });
     }
     else {
-        res.json({ error: 'erro de requicição' });
+        res.json({ error: 'É necessario adicionar um título ou descrição' });
     }
 });
 exports.add = add;
