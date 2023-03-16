@@ -19,10 +19,13 @@ export const add = async (req: Request, res: Response) => {
     const done = false;
     const newTask = new Task;
 
-    if(req.body.title) {
+    if(req.body.title || req.body.description) {
         
-        newTask.title = title;
         newTask.done = done;
+
+        if(title) {
+            newTask.title = title;
+        }
 
         if(description) {
             newTask.description = description;
@@ -33,7 +36,7 @@ export const add = async (req: Request, res: Response) => {
         res.json({ newTask })
 
     } else {
-        res.json({error: 'erro de requicição'});
+        res.json({error: 'É necessario adicionar um título ou descrição'});
     }
 };
 

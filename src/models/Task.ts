@@ -7,7 +7,7 @@ type TaskType = {
 };
 
 const schema = new Schema<TaskType>({
-    title: {type: String, required: true},
+    title: {type: String },
     description: {type: String},
     done: {type: Boolean}
 });
