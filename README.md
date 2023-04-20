@@ -12,10 +12,6 @@
  <a href="#autor">Autor</a>
 </p>
 
-<h4 align="center"> 
-	🚧  Em construção...  🚧
-</h4>
-
 <h2 id="demo">🕹️ Demo</h2>
 
 Link do demo da aplicação publicado no <a href="https://render.com/">Render</a> - https://api-tasklist.onrender.com
