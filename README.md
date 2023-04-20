@@ -33,7 +33,7 @@ As seguintes ferramentas foram usadas na construção do projeto:
 - [Express](https://expressjs.com/pt-br/)
 - [Nodemon](https://www.npmjs.com/package/nodemon)
 - [Validator](https://www.npmjs.com/package/validator)
-- [.env](https://www.npmjs.com/package/dotenv)
+- [dotenv](https://www.npmjs.com/package/dotenv)
 - [Body Parser](https://www.npmjs.com/package/body-parser)
 - [Cors](https://www.npmjs.com/package/cors)
 
