@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getOneTask = exports.search = exports.del = exports.att = exports.add = exports.all = exports.ping = void 0;
 const Task_1 = __importDefault(require("../models/Task"));
 const ping = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.json({ pong: true });
+    res.json({ trocar_imagem: true });
 });
 exports.ping = ping;
 const all = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

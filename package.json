@@ -9,7 +9,8 @@
   "scripts": {
     "start": "node dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start-dev": "nodemon -e ts,json,mustache src/server.ts"
+    "start-dev": "nodemon -e ts,json,mustache src/server.ts",
+    "build": "tsc"
   },
   "author": "Leandro T. Ribeiro",
   "license": "ISC",
@@ -19,7 +20,8 @@
     "@types/mongoose": "^5.11.97",
     "@types/node": "^18.11.11",
     "@types/nodemon": "^1.19.2",
-    "@types/validator": "^13.7.10"
+    "@types/validator": "^13.7.10",
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "body-parser": "^1.20.1",
