@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Task from '../models/Task';
 
 export const ping = async (req: Request, res: Response) => {
-    res.json({pong: true});
+    res.json({trocar_imagem: true});
 };
 
 export const all = async (req: Request, res: Response) => {
