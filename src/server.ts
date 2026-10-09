@@ -1,30 +1,12 @@
-import express, { Request, Response } from "express";
-import path from "path";
-import router from "./routes/routes";
-import dotenv from 'dotenv';
-import { mongoConect } from "./database/mongo";
-import cors from 'cors';
-import bodyParser from "body-parser";
+import { app } from './app';
+import { config } from './config';
+import { connectMongo } from './database/mongo';
 
-dotenv.config();
+app.listen(config.port, () => console.log(`API ouvindo na porta ${config.port}`));
 
-mongoConect();
-
-const server = express();
-
-server.use(cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE']
-}));
-
-server.use(express.static(path.join(__dirname, '../public')));
-
-server.use(bodyParser.json());
-
-server.use(router);
-
-server.use((req: Request, res: Response) => {
-    res.status(404).send(`Pagina não encontrada`);
+// Mongoose queues queries until the connection is up; without a database the
+// process exits so the host restarts it.
+connectMongo().catch(error => {
+    console.error('Não foi possível conectar ao MongoDB:', error.message);
+    process.exit(1);
 });
-
-server.listen(process.env.PORT);

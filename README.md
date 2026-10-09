@@ -12,9 +12,13 @@
  <a href="#autor">Autor</a>
 </p>
 
+<h4 align="center"> 
+	🚧  Em construção...  🚧
+</h4>
+
 <h2 id="demo">🕹️ Demo</h2>
 
-Link do demo da aplicação publicado no <a href="https://render.com/">Render</a> - https://api-tasklist.onrender.com
+API publicada no <a href="https://render.com/">Render</a>: https://api-tasklist.onrender.com (o primeiro acesso pode levar ~40 s, plano gratuito)
 
 <h2 id="objetivo">📖 Objetivo</h2>
 <p>Objetivo principal deste projeto foi a criação de um Backend e Frontend que tivésse todas as funcionalidades de um CRUD.</p>
@@ -23,204 +27,109 @@ Link do demo da aplicação publicado no <a href="https://render.com/">Render</a
 
 As seguintes ferramentas foram usadas na construção do projeto:
 
-- [Node.js](https://nodejs.org/en/)
+- [Node.js](https://nodejs.org/en/) 22+
 - [TypeScript](https://www.typescriptlang.org/)
-- [Mongoose](https://mongoosejs.com/)
-- [Express](https://expressjs.com/pt-br/)
-- [Nodemon](https://www.npmjs.com/package/nodemon)
-- [Validator](https://www.npmjs.com/package/validator)
-- [dotenv](https://www.npmjs.com/package/dotenv)
-- [Body Parser](https://www.npmjs.com/package/body-parser)
-- [Cors](https://www.npmjs.com/package/cors)
+- [Express 5](https://expressjs.com/pt-br/)
+- [Mongoose 8](https://mongoosejs.com/)
+- [express-rate-limit](https://www.npmjs.com/package/express-rate-limit)
+- [Cors](https://www.npmjs.com/package/cors) e [dotenv](https://www.npmjs.com/package/dotenv)
 
-> Veja o arquivo  [package.json](https://github.com/LeandroTRibeiro/api-tasklist/blob/main/package.json)
+> Veja o arquivo [package.json](https://github.com/LeandroTRibeiro/api-tasklist/blob/main/package.json)
 
 <h2 id="implantacao">📦 Implantação</h2>
 
-Este projeto é dividio em duas partes:
+Este projeto é dividido em duas partes:
 
-1. Backend 
+1. Backend (este repositório)
 2. Frontend <a href="https://github.com/LeandroTRibeiro/tasklist-app" target="_blank">Veja o repositório aqui!</a>
 
-💡 O Backend precisa de um arquivo ".env" com a chave "MONGO_URL" de seu banco de dados <a href="https://www.mongodb.com/">MongoDB</a> para funcionar.
+💡 Crie um arquivo `.env` (ele não vai para o Git) com:
 
-🧭 Rodando a aplicação web (Backend)
+| Variável | Obrigatória | Descrição |
+|---|---|---|
+| `MONGO_URL` | sim | Connection string do <a href="https://www.mongodb.com/">MongoDB</a> |
+| `CORS_ORIGINS` | não | Endereços do app que podem chamar a API, separados por vírgula (padrão: `http://localhost:5173,http://localhost:4173`) |
+| `PORT` | não | Porta do servidor (padrão: 2000) |
+
+🧭 Rodando a API
 
 ```bash
-# Pré-requisitos globais
-$ npm i -g nodemon typescript ts-node
-
 # clone o repositório
 $ git clone https://github.com/LeandroTRibeiro/api-tasklist
-
-# Acesse a pasta do projeto no seu terminal/cmd
 $ cd api-tasklist
 
-# Instale as dependências
+# instale as dependências
 $ npm install
 
-# Execute a aplicação em modo de desenvolvimento
-$ npm run start-dev
+# desenvolvimento (recarrega ao salvar)
+$ npm run dev
+
+# produção
+$ npm run build && npm start
 ```
 
 <h2 id="funcionalidades">⚙️ Funcionalidades</h2>
 
-Após o usuário acessar a aplicação:
-- [x] Criar uma tarefa com ou sem descrição da mesma 
-- [x] Editar uma tarefa
-- [x] Deletar uma tarefa
-- [x] Marcar uma tarefa como feita
-- [x] Pesquisar tarefas, pelo titulo ou parte dele
-- [x] Ordenar as terefas por mais antigas ou recentes
-- [x] Mudar o tema da aplicação
+- [x] Tarefas separadas por aparelho, sem login: cada aparelho usa um ID secreto (UUID) e o banco guarda só o hash dele
+- [x] Sincronização para o app offline: o aparelho envia o que mudou e recebe o que mudou no servidor; vence a edição mais recente
+- [x] Exclusões sincronizadas (lápides apagadas automaticamente após 30 dias)
+- [x] Usar as mesmas tarefas em outro aparelho com o mesmo código
+- [x] Limites: título até 120 caracteres, descrição até 500, 500 tarefas por aparelho e 120 requisições por minuto
 
 <h2 id="about">🗃️ Api endpoints</h2>
 
-A Api recebe informações pelo query params e por JSON.
+| Método | Endpoint | Descrição |
+|---|---|---|
+| `GET` | /ping | retorna `{"trocar_imagem": true}` |
+| `GET` | /v2/health | acorda o servidor e informa se o banco está conectado: `{"ok": true, "db": true}` |
+| `POST` | <a href="#sync">/v2/sync</a> | envia as alterações do aparelho e recebe as do servidor |
 
-| Methods | Endpoint | Descrição |
-|--------:|---------:|----------:|
-|`GET`    | /ping    | retorna: ```{"pong":"true"}```|
-|`GET`    | <a href="#tasks">/tasks</a>   | retorna todas as tarefas |
-|`GET`    | <a href="#search">/task/:query<a/> | retorna todas as tarefas com o mesmo nome ou parte dele |
-|`GET`    | <a href="#searchid">/task/show/:id</a> | retorna a tarefa com o mesmo id |
-|`POST`   | <a href="#add">/tasks</a> | adiciona uma nova tarefa |
-|`PUT`    | <a href="#put">/task/:id</a> | faz o update da tarefa selecionada pelo id |
-|`DEL`    | <a href="#del">/task/:id</a> | deleta a tarefa selecionada pelo id |
+<h3 id="sync">POST - /v2/sync</h3>
 
-<h3 id="tasks">GET - /tasks</h3>
+💡 Envie o cabeçalho `X-Device-Id` com o UUID do aparelho. Em `since`, mande o `serverTime` da última sincronização (ou `null` na primeira). Datas são em milissegundos.
+
+Request:
+
+```json
+{
+    "since": 1760012345678,
+    "changes": [
+        {
+            "id": "0b9a3c1e-6f0d-4f8e-9a4b-2a7d1c5e8f10",
+            "title": "Levar o carro na JF",
+            "description": "Troca de óleo e filtros",
+            "done": false,
+            "deleted": false,
+            "createdAt": 1760012000000,
+            "updatedAt": 1760012300000
+        }
+    ]
+}
+```
+
 Response:
 
-```
+```json
 {
+    "serverTime": 1760012400000,
     "tasks": [
         {
-            "_id": "63bea9d9edf64f4ce043c8ba",
-            "title": "DevTasks",
-            "done": true,
-            "description": "Terminar o Projeto",
-            "__v": 0
-        },
-        {
-            "_id": "63bea9ecedf64f4ce043c8be",
-            "title": "DevChat",
+            "id": "0b9a3c1e-6f0d-4f8e-9a4b-2a7d1c5e8f10",
+            "title": "Levar o carro na JF",
+            "description": "Troca de óleo e filtros",
             "done": false,
-            "description": "Terminar o projeto",
-            "__v": 0
-        },
-        {
-            "_id": "63beaa00edf64f4ce043c8c2",
-            "title": "NodeJs",
-            "done": false,
-            "description": "Criar controllers",
-            "__v": 0
+            "deleted": false,
+            "createdAt": 1760012000000,
+            "updatedAt": 1760012300000
         }
-    ]
-}
-
-```
-___
-
-<h3 id="search">GET - /tasks/:query</h3>
-💡 Mandar informações de pesquisa pelo query params. Ex: /tasks/Node
-<br>Response:
-
-```
-{
-    "task": [
-        {
-            "_id": "63beaa00edf64f4ce043c8c2",
-            "title": "NodeJs",
-            "done": false,
-            "description": "Terminar Curso de Node",
-            "__v": 0
-        }
-    ]
-}
-```
-___
-
-<h3 id="searchid">GET - /task/show/:id</h3>
-💡 Mandar informações de pesquisa pelo query params. Ex: /task/show/63beaa00edf64f4ce043c8c2
-<br>Response:
-
-```
-{
-    "task": {
-        "_id": "63beaa00edf64f4ce043c8c2",
-        "title": "NodeJs",
-        "done": false,
-        "description": "Terminar Curso de Node",
-        "__v": 0
-    }
-}
-```
-___
-
-<h3 id="add">POST - /task</h3>
-💡 Mandar informações da requisição por JSON, o campo "description" não é obrigatório para criação de uma nova tarefa e por padrão todas as novas tarefas começam com o campo "done" como false.
-<br>Request:
-
-```
-{
-    "title": "Nova Tarefa",
-    "description": "Fazer tarefa"
+    ],
+    "rejected": []
 }
 ```
 
-<br>Response:
+- `tasks`: tudo o que mudou no servidor desde `since`, incluindo tarefas excluídas (`"deleted": true`). Na primeira sincronização, só as tarefas ativas.
+- `rejected`: alterações recusadas e o motivo (ex.: título vazio ou longo demais).
 
-```
-{
-    "newTask": {
-        "_id": "63cedbaa716e6e1333b18130",
-        "title": "Nova Tarefa",
-        "done": false,
-        "description": "Fazer tarefa",
-        "__v": 0
-    }
-}
-```
-___
-
-<h3 id="put">PUT - /task/:id</h3>
-💡 Mandar informações de pesquisa pelo id no query params, e updates por JSON. Ex: /task/63cedbaa716e6e1333b18130
-
-<br>Request:
-
-```
-{
-    "title": "Nova Tarefa Updated",
-    "description": "Fazer tarefa Updated",
-    "done": true
-}
-```
-
-<br>Response:
-
-```
-{
-    "task": {
-        "_id": "63cedbaa716e6e1333b18130",
-        "title": "Nova Tarefa Updated",
-        "done": true,
-        "description": "Fazer tarefa Updated",
-        "__v": 0
-    }
-}
-```
-___
-
-<h3 id="del">DEL - /task/:id</h3>
-💡 Mandar informações de pesquisa pelo id no query params. Ex: /task/63cedbaa716e6e1333b18130
-
-<br>Response:
-
-```
-{}
-```
-___
-	
 <h2 id="licenca">📝 Licença</h2>
 
 Este projeto está sobre a licença MIT. 
